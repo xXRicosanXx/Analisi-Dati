@@ -1,33 +1,33 @@
-import streamlit as st
+import streamlit as strm
 import json
 import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 
 
-st.set_page_config(page_title="Visualizzatore 3000!", layout="wide")
+strm.set_page_config(page_title="Visualizzatore 3000!", layout="wide")
 
 
-st.title("Visualizza I dati CON: VISUALIZATORE 3000!")
+strm.title("Visualizza I dati CON: VISUALIZATORE 3000!")
 
 
 with open("media_mensile_pulita.json", "r") as file:
     media_mensile = json.load(file)
 
 
-st.sidebar.header("Menu Principale")
+strm.sidebar.header("Menu Principale")
 
 
-visualizzazione = st.sidebar.radio(
+visualizzazione = strm.sidebar.radio(
     "Seleziona Visualizzazione:",
     ["📊 Media Mensile", "ℹ️ Informazioni Inquinanti"]
 )
 
-st.sidebar.divider()
-st.sidebar.header("Seleziona i parametri") 
+strm.sidebar.divider()
+strm.sidebar.header("Seleziona i parametri") 
 
 stazioni = sorted(list(media_mensile.keys()), key=lambda x: int(x))
-stazione_selezionata = st.sidebar.selectbox(
+stazione_selezionata = strm.sidebar.selectbox(
     "Seleziona Stazione:",
     stazioni,
     format_func=lambda x: f"Stazione {x}"
@@ -35,7 +35,7 @@ stazione_selezionata = st.sidebar.selectbox(
 
 
 anni_disponibili = sorted([int(anno) for anno in media_mensile[stazione_selezionata].keys()])
-anni_selezionati = st.sidebar.multiselect(
+anni_selezionati = strm.sidebar.multiselect(
     "Seleziona Anni:",
     anni_disponibili,
     default=anni_disponibili
@@ -54,14 +54,14 @@ inquinanti_disponibili = sorted(list(inquinanti_disponibili))
 mesi_disponibili = sorted(list(mesi_disponibili))
 
 
-inquinanti_selezionati = st.sidebar.multiselect(
+inquinanti_selezionati = strm.sidebar.multiselect(
     "Seleziona Inquinanti:",
     inquinanti_disponibili,
     default=inquinanti_disponibili
 )
 
 
-mesi_selezionati = st.sidebar.multiselect(
+mesi_selezionati = strm.sidebar.multiselect(
     "Seleziona Mesi:",
     mesi_disponibili,
     default=mesi_disponibili
@@ -91,7 +91,7 @@ if visualizzazione == "📊 Media Mensile":
     if dati_grafico:
         df = pd.DataFrame(dati_grafico)
         
-        st.header("📊 Media Mensile")
+        strm.header("📊 Media Mensile")
         
         fig = go.Figure()
         
@@ -113,11 +113,11 @@ if visualizzazione == "📊 Media Mensile":
             height=500
         )
         
-        st.plotly_chart(fig, use_container_width=True)
+        strm.plotly_chart(fig, use_container_width=True)
         
 
-        st.header("Tabella Dati")
-        st.dataframe(
+        strm.header("Tabella Dati")
+        strm.dataframe(
             df.pivot_table(
                 values='Valore',
                 index='Data',
@@ -128,10 +128,10 @@ if visualizzazione == "📊 Media Mensile":
         )
         
     else:
-        st.warning("Nessun dato disponibile con i parametri selezionati")
+        strm.warning("Nessun dato disponibile con i parametri selezionati")
 
 elif visualizzazione == "ℹ️ Informazioni Inquinanti":
-    st.header("ℹ️ Informazioni Inquinanti")
+    strm.header("ℹ️ Informazioni Inquinanti")
     
     inquinanti_info = {
         "PM10": {
@@ -167,7 +167,7 @@ elif visualizzazione == "ℹ️ Informazioni Inquinanti":
     }
     
     for inquinante, info in inquinanti_info.items():
-        with st.expander(f"🔬 {inquinante}"):
-            st.write(f"**Descrizione:** {info['descrizione']}")
-            st.write(f"**Limite normativo:** {info['limite']}")
-            st.write(f"**Effetti sulla salute:** {info['effetti']}")
+        with strm.expander(f"🔬 {inquinante}"):
+            strm.write(f"**Descrizione:** {info['descrizione']}")
+            strm.write(f"**Limite normativo:** {info['limite']}")
+            strm.write(f"**Effetti sulla salute:** {info['effetti']}")
